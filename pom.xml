@@ -4,28 +4,32 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.template.spring</groupId>
     <artifactId>SpringMVCHibernate</artifactId>
-    <name>SpringMVCHibernate</name>
-    <packaging>war</packaging>
-    
     <version>1.0.0-BUILD-SNAPSHOT</version>
-    
+    <packaging>war</packaging>
+
     <name>Template management System</name>
-	<description>Template management System</description>
+
+
+    <description>Template management System</description>
 
     <url>https://github.com/LHristozov</url>
-	<developers>
-		<developer>
-			<id>LHristozov</id>
-			<name>Lybomir Hristozov</name>
-			<organization>Example Soft Bulgaria</organization>
-			<timezone>+2</timezone>
-		</developer>
-	</developers>
-    
+    <developers>
+        <developer>
+            <id>LHristozov</id>
+            <name>Lybomir Hristozov</name>
+            <organization>Musala Soft Bulgaria</organization>
+            <timezone>+2</timezone>
+
+            <roles>
+                <role>Software Developer</role>
+            </roles>
+        </developer>
+    </developers>
+
     <properties>
         <!-- ========================= -->
-		<!-- DEPENDENCIES VERSION -->
-		<!-- ======================== -->
+        <!-- DEPENDENCIES VERSION -->
+        <!-- ======================== -->
         <spring.version>4.2.0.RELEASE</spring.version>
         <spring-security.version>4.0.2.RELEASE</spring-security.version>
         <spring-data-jpa.version>1.8.2.RELEASE</spring-data-jpa.version>
@@ -35,14 +39,16 @@
         <mysql-connector.version>5.1.6</mysql-connector.version>
         <commons-dbcp.version>1.4</commons-dbcp.version>
         <!-- ========================= -->
-		<!-- PLUGIN Specific PROPERTIES -->
-		<!-- ========================= -->
-        <maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+        <!-- PLUGIN Specific PROPERTIES -->
         <!-- ========================= -->
-		<!-- PLUGIN VERSION PROPERTIES -->
-		<!-- ========================= -->
-		<additionalparam>-Xlint:all</additionalparam>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <!-- ========================= -->
+        <!-- PLUGIN VERSION PROPERTIES -->
+        <!-- ========================= -->
+        <version.compiler.plugin>3.5.1</version.compiler.plugin>
+        <maven-surefire-plugin.version>2.20</maven-surefire-plugin.version>
+        <additionalparam>-Xlint:all</additionalparam>
     </properties>
     <dependencies>
         <!-- Spring -->
@@ -208,6 +214,50 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>site</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+            <plugin>
+                <groupId>org.eclipse.m2e</groupId>
+                <artifactId>lifecycle-mapping</artifactId>
+                <version>1.0.0</version>
+                <configuration>
+                    <lifecycleMappingMetadata>
+                        <pluginExecutions>
+                            <pluginExecution>
+                                <pluginExecutionFilter>
+                                    <groupId>org.codehaus.mojo</groupId>
+                                    <artifactId>properties-maven-plugin</artifactId>
+                                    <versionRange>[1.0.0,)</versionRange>
+                                    <goals>
+                                        <goal>set-system-properties</goal>
+                                    </goals>
+                                </pluginExecutionFilter>
+                                <action>
+                                    <ignore/>
+                                </action>
+                            </pluginExecution>
+                        </pluginExecutions>
+                    </lifecycleMappingMetadata>
+                </configuration>
+            </plugin>
+            <plugin>
                 <artifactId>maven-eclipse-plugin</artifactId>
                 <version>2.9</version>
                 <configuration>
@@ -224,11 +274,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
+                <version>${version.compiler.plugin}</version>
                 <configuration>
                     <source>${maven.compiler.source}</source>
                     <target>${maven.compiler.target}</target>
                     <compilerArgument>${additionalparam}</compilerArgument>
+                    <encoding>${project.build.sourceEncoding}</encoding>
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
                 </configuration>
@@ -253,7 +304,7 @@
                 </configuration>
             </plugin>
         </plugins>
-        
+
         <finalName>${project.artifactId}</finalName>
 
     </build>
