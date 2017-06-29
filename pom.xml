@@ -9,7 +9,6 @@
 
     <name>Template management System</name>
 
-
     <description>Template management System</description>
 
     <url>https://github.com/LHristozov</url>
@@ -27,6 +26,10 @@
     </developers>
 
     <properties>
+
+        <encoding>UTF-8</encoding>
+        <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
         <!-- ========================= -->
         <!-- DEPENDENCIES VERSION -->
         <!-- ======================== -->
@@ -41,14 +44,29 @@
         <!-- ========================= -->
         <!-- PLUGIN Specific PROPERTIES -->
         <!-- ========================= -->
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
         <!-- ========================= -->
         <!-- PLUGIN VERSION PROPERTIES -->
         <!-- ========================= -->
         <version.compiler.plugin>3.5.1</version.compiler.plugin>
         <maven-surefire-plugin.version>2.20</maven-surefire-plugin.version>
         <additionalparam>-Xlint:all</additionalparam>
+        <maven-javadoc-plugin.version>2.8.1</maven-javadoc-plugin.version>
+        <maven-site-plugin.version>3.6</maven-site-plugin.version>
+        <maven-project-info-reports-plugin.version>2.4</maven-project-info-reports-plugin.version>
+        <maven-source-plugin.version>2.1.2</maven-source-plugin.version>
+        <build-helper-maven-plugin.version>1.5</build-helper-maven-plugin.version>
+        <jetty-maven-plugin.version>9.2.11.v20150529</jetty-maven-plugin.version>
+        <exec-maven-plugin.version>1.2.1</exec-maven-plugin.version>
+        <maven-eclipse-plugin.version>2.9</maven-eclipse-plugin.version>
+        <!-- Internal system properties -->
+        <xms>16M</xms>
+        <xmx>512M</xmx>
+        <compiler.xms>${xms}</compiler.xms>
+        <compiler.xmx>${xmx}</compiler.xmx>
+        <surefire.xms>${xms}</surefire.xms>
+        <surefire.xmx>${xmx}</surefire.xmx>
     </properties>
     <dependencies>
         <!-- Spring -->
@@ -217,11 +235,28 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <forkCount>1</forkCount>
+                    <reuseForks>true</reuseForks>
+                    <enableAssertions>false</enableAssertions>
+                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                    <argLine> -XX:MaxPermSize=256m -Xms${surefire.xms} -Xmx${surefire.xmx} -XX:-UseSplitVerifier</argLine>
+                </configuration>
             </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc-plugin.version}</version>
+                <configuration>
+                    <show>private</show>
+                    <nohelp>true</nohelp>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
+                <version>${maven-site-plugin.version}</version>
                 <executions>
                     <execution>
                         <phase>prepare-package</phase>
@@ -258,8 +293,9 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-eclipse-plugin</artifactId>
-                <version>2.9</version>
+                <version>${maven-eclipse-plugin.version}</version>
                 <configuration>
                     <additionalProjectnatures>
                         <projectnature>org.springframework.ide.eclipse.core.springnature</projectnature>
@@ -276,6 +312,9 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${version.compiler.plugin}</version>
                 <configuration>
+                    <fork>true</fork>
+                    <maxmem>${compiler.xmx}</maxmem>
+                    <meminitial>${compiler.xms}</meminitial>
                     <source>${maven.compiler.source}</source>
                     <target>${maven.compiler.target}</target>
                     <compilerArgument>${additionalparam}</compilerArgument>
@@ -287,7 +326,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>1.2.1</version>
+                <version>${exec-maven-plugin.version}</version>
                 <configuration>
                     <mainClass>org.test.int1.Main</mainClass>
                 </configuration>
@@ -295,13 +334,38 @@
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-                <version>9.2.11.v20150529</version>
+                <version>${jetty-maven-plugin.version}</version>
                 <configuration>
                     <scanIntervalSeconds>10</scanIntervalSeconds>
                     <webApp>
                         <contextPath>/</contextPath>
                     </webApp>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>${maven-project-info-reports-plugin.version}</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>${maven-source-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>${build-helper-maven-plugin.version}</version>
             </plugin>
         </plugins>
 
@@ -311,7 +375,7 @@
 
     <profiles>
         <profile>
-         <!-- In order to activate it use mvn install -P=check-styles -Dfix=true -->
+            <!-- In order to activate it use mvn install -P=check-styles -Dfix=true -->
             <id>check-styles</id>
             <build>
                 <plugins>
