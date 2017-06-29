@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.template.spring</groupId>
     <artifactId>SpringMVCHibernate</artifactId>
@@ -177,11 +177,11 @@
         </dependency>
 
         <!-- @Inject -->
-        <!-- 	<dependency>
-			<groupId>javax.inject</groupId>
-			<artifactId>javax.inject</artifactId>
-			<version>1</version>
-		</dependency> -->
+        <!--     <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>1</version>
+        </dependency> -->
 
         <!-- Servlet -->
         <dependency>
@@ -232,7 +232,7 @@
                 </executions>
             </plugin>
             <!--This plugin's configuration is used to store Eclipse m2e settings 
-					only. It has no influence on the Maven build itself. -->
+                    only. It has no influence on the Maven build itself. -->
             <plugin>
                 <groupId>org.eclipse.m2e</groupId>
                 <artifactId>lifecycle-mapping</artifactId>
@@ -308,4 +308,39 @@
         <finalName>${project.artifactId}</finalName>
 
     </build>
+
+    <profiles>
+        <profile>
+         <!-- In order to activate it use mvn install -P=check-styles -Dfix=true -->
+            <id>check-styles</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.gmaven</groupId>
+                        <artifactId>gmaven-plugin</artifactId>
+                        <version>1.5</version>
+                        <inherited>false</inherited>
+                        <executions>
+                            <execution>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>execute</goal>
+                                </goals>
+                                <configuration>
+                                    <source>${pom.basedir}/check_styles.groovy</source>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.codehaus.groovy</groupId>
+                                <artifactId>groovy-nio</artifactId>
+                                <version>2.3.7</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
